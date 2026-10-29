@@ -101,6 +101,10 @@ async def chrome_browser() -> AsyncIterator[zd.Browser]:
             "--disable-gpu",
         ],
         browser_executable_path=chrome_path,
+        # The first headless Chrome launch on a cold CI runner can take longer
+        # than zendriver's default connect budget (0.25 s x 10 tries).
+        browser_connection_timeout=0.5,
+        browser_connection_max_tries=40,
     )
     try:
         yield browser
